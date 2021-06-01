@@ -1,3 +1,4 @@
+
 import { Negociacao } from './negociacao';
 
 export class Negociacoes {
