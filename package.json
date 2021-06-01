@@ -14,6 +14,6 @@
     "typescript": "^2.3.2"
   },
   "dependencies": {
-    "@types/jquery": "^3.5.5"
+    "@types/jquery": "^2.0.42"
   }
 }
