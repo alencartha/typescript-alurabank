@@ -1,6 +1,5 @@
-import {NegociacoesView, MensagemView} from '../views/index'
-import {Negociacoes, Negociacao} from '../models/index'
-
+import { NegociacoesView, MensagemView } from '../views/index';
+import { Negociacoes, Negociacao } from '../models/index';
 
 export class NegociacaoController {
   private _inputData: JQuery;
@@ -12,7 +11,7 @@ export class NegociacaoController {
 
   constructor() {
     this._inputData = $('#data');
-    this._inputQuantidade = $('#quantidade')
+    this._inputQuantidade = $('#quantidade');
 
     this._inputValor = $('#valor');
     this._negociacoesView.update(this._negociacoes);
@@ -21,8 +20,15 @@ export class NegociacaoController {
   adiciona(event: Event) {
     event.preventDefault();
 
+    let data = new Date(this._inputData.val().replace(/-/g, ','));
+
+    if (this.ehDiaUtil(data)) {
+      this._mensagemView.update('Somente negociações em dias úteis, por favor.');
+      return
+    }
+
     const negociacao = new Negociacao(
-      new Date(this._inputData.val().replace(/-/g, ',')),
+      data,
       parseInt(this._inputQuantidade.val()),
       parseFloat(this._inputValor.val())
     );
@@ -31,4 +37,21 @@ export class NegociacaoController {
     this._negociacoesView.update(this._negociacoes);
     this._mensagemView.update('Negociação adicionada com sucesso!');
   }
+
+  private ehDiaUtil(data: Date) {
+    return (
+      data.getDay() != diaDaSemana.Sabado ||
+      data.getDay() != diaDaSemana.Domingo
+    );
+  }
+}
+
+enum diaDaSemana {
+  Domingo,
+  Segunda,
+  Terca,
+  Quarta,
+  Quinta,
+  Sexta,
+  Sabado,
 }
