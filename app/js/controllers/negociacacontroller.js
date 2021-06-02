@@ -41,7 +41,28 @@ System.register(["../views/index", "../models/index", "../helpers/decorators/ind
                     this._mensagemView.update('Negociação adicionada com sucesso!');
                 }
                 _ehDiaUtil(data) {
-                    return data.getDay() != DiaDaSemana.Sabado && data.getDay() != DiaDaSemana.Domingo;
+                    return (data.getDay() != DiaDaSemana.Sabado &&
+                        data.getDay() != DiaDaSemana.Domingo);
+                }
+                importarDados() {
+                    function isOk(res) {
+                        if (res.ok) {
+                            return res;
+                        }
+                        else {
+                            throw new Error(res.statusText);
+                        }
+                    }
+                    fetch('http://localhost:8080/dados')
+                        .then((res) => isOk(res))
+                        .then((res) => res.json())
+                        .then((dados) => {
+                        dados
+                            .map((dado) => new index_2.Negociacao(new Date(), dado.vezes, dado.montante))
+                            .forEach((negociacao) => this._negociacoes.adiciona(negociacao));
+                        this._negociacoesView.update(this._negociacoes);
+                    })
+                        .catch((error) => console.log(error));
                 }
             };
             __decorate([
